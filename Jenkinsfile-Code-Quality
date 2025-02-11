@@ -26,6 +26,11 @@ pipeline {
             steps {
                 sh "poetry run pytest"
             }
+        }
+        stage('Debug PATH') {
+            steps {
+                sh 'echo "Jenkins PATH: $PATH"'
+            }
         }    
     }
 }
