@@ -1,5 +1,8 @@
 pipeline {
     agent any
+        environment {
+        PATH = "/Users/hathaway/.local/bin:$PATH"
+    }
     stages {
         stage('environment variables') {
             steps {
@@ -16,16 +19,37 @@ pipeline {
                 echo "PR: ${CHANGE_ID}"
             }
         }            
+        // stage('Setup') {
+        //     steps {
+        //         sh 'export PATH="$HOME/.local/bin:$PATH" && poetry install --with dev'
+        //     }
+        // }
+
+        // stage('Test') {
+        //     steps {
+        //         sh 'echo "Jenkins PATH: $PATH"'
+        //         sh "poetry run pytest"
+        //     }
+        // }
         stage('Setup') {
             steps {
-                sh 'export PATH="$HOME/.local/bin:$PATH" && poetry install --with dev'
+                sh '''
+                    export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+                    echo "Updated PATH in Setup: $PATH"
+                    which poetry || echo "Poetry not found"
+                    poetry --version
+                    poetry install --with dev
+                '''
             }
         }
 
         stage('Test') {
             steps {
-                sh 'echo "Jenkins PATH: $PATH"'
-                sh "poetry run pytest"
+                sh '''
+                    echo "Jenkins PATH: $PATH"
+                    which poetry
+                    poetry run pytest
+                '''
             }
         }
         
