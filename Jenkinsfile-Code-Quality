@@ -48,6 +48,7 @@ pipeline {
                 sh '''
                     echo "Jenkins PATH: $PATH"
                     which poetry
+                    source $(poetry env info --path)/bin/activate
                     poetry run pytest
                 '''
             }
