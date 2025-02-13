@@ -38,6 +38,7 @@ pipeline {
                     echo "Updated PATH in Setup: $PATH"
                     which poetry || echo "Poetry not found"
                     poetry --version
+                    poetry env remove python || echo "No existing virtualenv"
                     poetry install --with dev
                 '''
             }
@@ -49,6 +50,7 @@ pipeline {
                     echo "Jenkins PATH: $PATH"
                     which poetry
                     source $(poetry env info --path)/bin/activate
+                    pip list | grep pytest  # Check if pytest is installed
                     poetry run pytest
                 '''
             }
