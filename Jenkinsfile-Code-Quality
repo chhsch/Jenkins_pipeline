@@ -31,27 +31,55 @@ pipeline {
         //         sh "poetry run pytest"
         //     }
         // }
+        // stage('Setup') {
+        //     steps {
+        //         sh '''
+        //             export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+        //             echo "Updated PATH in Setup: $PATH"
+        //             which poetry || echo "Poetry not found"
+        //             poetry --version
+        //             poetry env remove python || echo "No existing virtualenv"
+        //             poetry install --with dev
+        //         '''
+        //     }
+        // }
         stage('Setup') {
-            steps {
-                sh '''
-                    export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-                    echo "Updated PATH in Setup: $PATH"
-                    which poetry || echo "Poetry not found"
-                    poetry --version
-                    poetry install --with dev
-                '''
-            }
-        }
+    steps {
+        sh '''
+            export PATH="$HOME/.local/bin:$PATH"
+            echo "Updated PATH in Setup: $PATH"
+            which poetry || echo "Poetry not found"
+            poetry --version
+            poetry env remove python || echo "No existing virtualenv"
+            poetry cache clear --all pypoetry  # Clear poetry cache
+            poetry install --with dev
+        '''
+    }
+}
 
+
+        // stage('Test') {
+        //     steps {
+        //         sh '''
+        //             echo "Jenkins PATH: $PATH"
+        //             which poetry
+        //             source $(poetry env info --path)/bin/activate
+        //             poetry run pytest
+        //         '''
+        //     }
+        // }
         stage('Test') {
-            steps {
-                sh '''
-                    echo "Jenkins PATH: $PATH"
-                    which poetry
-                    poetry run pytest
-                '''
-            }
-        }
-        
+    steps {
+        sh '''
+            echo "Jenkins PATH: $PATH"
+            which poetry
+            source $(poetry env info --path)/bin/activate
+            pip install --upgrade pytest  # Force reinstallation of pytest
+            pip list | grep pytest  # Verify that pytest is installed
+            poetry run pytest  # Run tests
+        '''
+    }
+}
+
     }
 }
