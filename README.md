@@ -1,13 +1,15 @@
-# Jenkins_pipeline
-
-# Multibranch Pipeline
-Run this pipeline across all branches except `main`.
+## Pipelines
+We have two pipelines:
+- **Main Pipeline**: Runs when changes are merged into `main`.
+- **Feature1 Pipeline**: Runs on feature branches except `main`.
+![Alt Text](images/feature1.png)
 
 ## About `main`
 This pipeline will run for all branches except `main`.  
 We are developing a release pipeline that triggers when we commit or push to `main`.  
 Once changes are merged into `main`, this pipeline will execute.  
 For other pipelines, ensure they are configured not to run on the `main` branch.
+![Alt Text](images/main.png)
 
 ## Setting Up Jenkins Multibranch Pipeline
 ### 1. Install Jenkins & Required Plugins
@@ -30,7 +32,10 @@ For other pipelines, ensure they are configured not to run on the `main` branch.
 - In **Advanced** under **Branch Sources**, set:
   - **"Include"** to `*`
   - **"Exclude"** to `main` to prevent builds on the `main` branch.
+  ![Alt Text](images/wildcard.png)
 
 ### 6. Save and Apply
 - Jenkins will scan the repository and trigger jobs accordingly.
+
+
 
